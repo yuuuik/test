@@ -1260,15 +1260,19 @@
   }
 
   // Вероятность краша зависит от текущего коэффициента:
-  // до ×3  — ~10% (легко добраться до первых этажей)
-  // ×3–×5  — ~18% (умеренный риск)
-  // ×5–×10 — ~28% (ощутимый риск)
-  // ×10+   — ~38% (высокий риск, дальше редкость)
+  // 1-й этаж (mult=1.0) — 0%  (первый этаж всегда строится)
+  // до ×2   — 4%  (почти всегда доходишь до ×2)
+  // ×2–×3   — 8%  (небольшой риск)
+  // ×3–×5   — 20% (ощутимо)
+  // ×5–×10  — 32% (серьёзный риск)
+  // ×10+    — 42% (каждый этаж может быть последним)
   function simCrashChance(currentMult) {
-    if (currentMult < 3)  return Math.random() < 0.10;
-    if (currentMult < 5)  return Math.random() < 0.18;
-    if (currentMult < 10) return Math.random() < 0.28;
-    return Math.random() < 0.38;
+    if (currentMult <= 1.0) return false;        // первый этаж гарантирован
+    if (currentMult < 2)    return Math.random() < 0.04;
+    if (currentMult < 3)    return Math.random() < 0.08;
+    if (currentMult < 5)    return Math.random() < 0.20;
+    if (currentMult < 10)   return Math.random() < 0.32;
+    return Math.random() < 0.42;
   }
 
   function simUpdateDisplay(multText, status, crashed) {
